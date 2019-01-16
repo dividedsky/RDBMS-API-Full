@@ -76,4 +76,19 @@ router.put('/:id', ensureValidCohort, (req, res) => {
       });
   }
 });
+
+router.delete('/:id', ensureValidCohort, (req, res) => {
+  db('cohorts').where({ id: req.params.id })
+    .del()
+    .then((count) => {
+      if (count) {
+        res.status(200).json({ message: 'the cohort has been deleted' });
+      } else {
+        res.status(500).json({ error: 'there was an error deleting the cohort' });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({ error: `there was an error deleting the cohort: ${err}` });
+    });
+});
 module.exports = router;
