@@ -22,6 +22,17 @@ exports.ensureValidStudent = (req, res, next) => {
   if (!req.body.name) {
     res.status(400).json({ error: 'a student must have a name' });
   } else {
-    next();
+    db('students')
+      .where({ id: req.params.id })
+      .then((student) => {
+        if (student.length) {
+          next();
+        } else {
+          res.status(400).json({ error: 'there is no student with that id' });
+        }
+      })
+      .catch((err) => {
+        res.status(500).json({ error: `there was an error retrieving the student: ${err}` });
+      });
   }
 };

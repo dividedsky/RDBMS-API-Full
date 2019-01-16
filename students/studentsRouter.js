@@ -11,8 +11,11 @@ router.post('/', ensureValidStudent, (req, res) => {
       if (count) {
         res.status(200).json({ message: 'student added to db' });
       } else {
-        res.status(500).json({ error: `there was an error inserting the student into the db: ${err}` });
+        res.status(500).json({ error: 'there was an error inserting the student into the db' });
       }
+    })
+    .catch((err) => {
+      res.status(500).json({ error: `there was an error inserting the student into the db: ${err}` });
     });
 });
 
@@ -23,6 +26,17 @@ router.get('/', (req, res) => {
     })
     .catch((err) => {
       res.status(500).json({ error: `there was an error retrieving from the db: ${err}` });
+    });
+});
+
+router.get('/:id', ensureValidStudent, (req, res) => {
+  db('students')
+    .where({ id: req.params.id })
+    .then((student) => {
+      res.status(200).json(student);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: `there was an error getting the student: ${err}` });
     });
 });
 
