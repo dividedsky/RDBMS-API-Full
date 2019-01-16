@@ -1,5 +1,6 @@
 const express = require('express');
 const db = require('../config/dbConfig');
+const { ensureValidCohort } = require('../common/middleware');
 
 const router = express.Router();
 
@@ -40,18 +41,23 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', ensureValidCohort, (req, res) => {
+  // correct id has been checked by middleware
   db('cohorts')
     .where({ id: req.params.id })
     .then((cohort) => {
-      if (cohort.length) {
-        res.status(200).json(cohort);
-      } else {
-        res.status(400).json({ error: 'there is no cohort with that id number' });
-      }
+      res.status(200).json(cohort);
     })
     .catch((err) => {
       res.status(500).json({ errorMessage: `there was an error retrieving the cohort: ${err}` });
+    });
+});
+
+router.get('/:id/students', ensureValidCohort, (req, res) => {
+  db('students')
+    .where({ cohort_id: req.params.id })
+    .then((list) => {
+      res.status(200).json(list);
     });
 });
 
