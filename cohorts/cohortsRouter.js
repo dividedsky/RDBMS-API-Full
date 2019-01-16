@@ -3,6 +3,29 @@ const db = require('../config/dbConfig');
 
 const router = express.Router();
 
+/** ** POST ROUTE *** */
+router.post('/', (req, res) => {
+  console.log(req.body.length);
+
+  if (!req.body.name || Object.keys(req.body).length !== 1) {
+    res.status(400).json({ error: 'the POST should only contain an object with a name' });
+  } else {
+    db('cohorts')
+      .insert(req.body)
+      .then((count) => {
+        if (!count) {
+          res.status(500).json({ error: 'there was an error adding the cohort' });
+        } else {
+          res.status(201).json({ message: 'the cohort was created' });
+        }
+      })
+      .catch((err) => {
+        res.status(500).json({ error: `there was an error adding the cohort: ${err}` });
+      });
+  }
+});
+
+/** ** GET ROUTES *** */
 router.get('/', (req, res) => {
   db('cohorts')
     .then((list) => {
