@@ -17,3 +17,11 @@ exports.ensureValidCohort = (req, res, next) => {
       res.status(500).json({ error: `there was an error accessing the db: ${err}` });
     });
 };
+
+exports.ensureValidStudent = (req, res, next) => {
+  if (!req.body.name) {
+    res.status(400).json({ error: 'a student must have a name' });
+  } else {
+    next();
+  }
+};

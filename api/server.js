@@ -1,5 +1,6 @@
 const express = require('express');
 const cohortsRouter = require('../cohorts/cohortsRouter');
+const studentsRouter = require('../students/studentsRouter');
 const configureMiddleware = require('../config/middleware');
 
 const server = express();
@@ -10,6 +11,7 @@ server.get('/', (req, res) => {
 });
 
 server.use('/api/cohorts', cohortsRouter);
+server.use('/api/students', studentsRouter);
 
 
 module.exports = server;
