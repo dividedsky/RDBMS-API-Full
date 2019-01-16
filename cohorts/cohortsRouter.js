@@ -61,4 +61,19 @@ router.get('/:id/students', ensureValidCohort, (req, res) => {
     });
 });
 
+router.put('/:id', ensureValidCohort, (req, res) => {
+  if (!req.body.name || Object.keys(req.body).length !== 1) {
+    res.status(400).json({ error: 'the POST should only contain an object with a name' });
+  } else {
+    const changes = req.body;
+    db('cohorts').update(changes)
+      .then((count) => {
+        if (!count) {
+          res.status(500).json({ error: 'there was an error updating the db' });
+        } else {
+          res.status(200).json({ message: 'the cohort was updated' });
+        }
+      });
+  }
+});
 module.exports = router;
