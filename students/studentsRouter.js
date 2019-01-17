@@ -30,8 +30,11 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', ensureValidStudent, (req, res) => {
+  console.log(db('students'));
   db('students')
-    .where({ id: req.params.id })
+    .join('cohorts', 'students.cohort_id', 'cohorts.id')
+    .where({ 'students.id': req.params.id })
+    .select('students.id', 'students.name', 'cohorts.name as cohort')
     .then((student) => {
       res.status(200).json(student);
     })
