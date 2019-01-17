@@ -30,7 +30,6 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', ensureValidStudent, (req, res) => {
-  console.log(db('students'));
   db('students')
     .join('cohorts', 'students.cohort_id', 'cohorts.id')
     .where({ 'students.id': req.params.id })
@@ -53,6 +52,22 @@ router.put('/:id', ensureValidStudent, (req, res) => {
       } else {
         res.status(200).json({ message: `${count} students were updated` });
       }
+    });
+});
+
+router.delete('/:id', ensureValidStudent, (req, res) => {
+  db('students')
+    .where({ id: req.params.id })
+    .del()
+    .then((count) => {
+      if (!count) {
+        res.status(500).json({ error: 'there was an error deleting the student' });
+      } else {
+        res.status(200).json({ message: `${count} student was deleted` });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({ error: `there was an error while deleting the student: ${err}` });
     });
 });
 
