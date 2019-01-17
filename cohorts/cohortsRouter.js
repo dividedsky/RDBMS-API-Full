@@ -66,7 +66,9 @@ router.put('/:id', ensureValidCohort, (req, res) => {
     res.status(400).json({ error: 'the POST should only contain an object with a name' });
   } else {
     const changes = req.body;
-    db('cohorts').update(changes)
+    db('cohorts')
+      .where({ id: req.params.id })
+      .update(changes)
       .then((count) => {
         if (!count) {
           res.status(500).json({ error: 'there was an error updating the db' });

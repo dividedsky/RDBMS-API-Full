@@ -19,7 +19,7 @@ exports.ensureValidCohort = (req, res, next) => {
 };
 
 exports.ensureValidStudent = (req, res, next) => {
-  if (!req.body.name) {
+  if (!req.body.name || Object.keys(req.body).length !== 1) {
     res.status(400).json({ error: 'a student must have a name' });
   } else {
     db('students')

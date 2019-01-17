@@ -43,5 +43,18 @@ router.get('/:id', ensureValidStudent, (req, res) => {
     });
 });
 
+router.put('/:id', ensureValidStudent, (req, res) => {
+  db('students')
+    .where({ id: req.params.id })
+    .update(req.body)
+    .then((count) => {
+      if (!count) {
+        res.status(500).json({ error: 'There was an error updating the student' });
+      } else {
+        res.status(200).json({ message: `${count} students were updated` });
+      }
+    });
+});
+
 
 module.exports = router;
